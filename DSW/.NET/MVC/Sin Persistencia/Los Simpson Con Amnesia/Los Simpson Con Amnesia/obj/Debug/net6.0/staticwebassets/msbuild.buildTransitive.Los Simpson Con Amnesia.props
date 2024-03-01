@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\buildMultiTargeting\Los Simpson Con Amnesia.props" />
+</Project>

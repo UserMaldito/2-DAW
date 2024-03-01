@@ -1,0 +1,48 @@
+﻿@model Los_Simpson_Con_Amnesia.Models.Personaje
+
+@{
+    ViewData["Title"] = "Crear Personaje";
+}
+
+<h1>Agregar</h1>
+
+<h4>Personaje</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                @* 
+                    input -> Hidden => el usuario no debe manejar NUNCA los id. 
+                    Escóndelos, el programa lo necesita para crear al personaje 
+                *@
+                <input asp-for="Id" type="hidden" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Age" class="control-label"></label>
+                <input asp-for="Age" class="form-control" />
+                <span asp-validation-for="Age" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Job" class="control-label"></label>
+                <input asp-for="Job" class="form-control" />
+                <span asp-validation-for="Job" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
+                <input type="submit" value="Crear" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+<br />
+<div>
+    <a asp-action="Index">Volver al Listado</a>
+</div>
+
