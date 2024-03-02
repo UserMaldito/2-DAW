@@ -7,6 +7,17 @@ namespace Los_Simpson_Con_Amnesia.Controllers
     //Se encarga de ofrecer rutas (endpoints)
     public class PersonajeController : Controller
     {
+        //Sin Persistencia = Necesidad de Guardar En Alguna Parte
+        // = Lista Por Defecto
+        private static List<Personaje> characters = new List<Personaje>
+        {
+            new Personaje { Id = 1, Name = "Bart", Age = 8 , Job = "Grafitero"},
+            new Personaje { Id = 2, Name = "Marge", Age = 42 , Job = "Ama de Casa"},
+            new Personaje { Id = 3, Name = "Homer", Age = 39 , Job = "Ingeniero"}
+        };
+        private static int contadorID = characters.Count;
+
+
         [HttpGet]
         public IActionResult Index()
         {
@@ -31,7 +42,7 @@ namespace Los_Simpson_Con_Amnesia.Controllers
             //Si no hay  errores, crea el personaje y va hacia el listado (para ver los cambios)
             if (ModelState.IsValid)
             {
-                PersonajeService.CreateCharacter(createPersonaje);
+                this.CreateCharacter(createPersonaje);
 
                 return RedirectToAction("ReadAll");
             }
@@ -44,22 +55,22 @@ namespace Los_Simpson_Con_Amnesia.Controllers
         public IActionResult ReadAll()
         {
             //Forma 2: uso del ViewBag/ViewData[""]
-            ViewBag.listaPersonaje = PersonajeService.ListCharacter();
+            ViewBag.listaPersonaje = this.ListCharacter();
             return View();
         }
 
         [HttpGet]
         public IActionResult ReadSingle(int id)
         {
-            Personaje readChar = PersonajeService.SearchCharacter(id);
+            Personaje readChar = this.ReadCharacter(id);
             return View(readChar);
         }
 
 
         [HttpGet]
-        public IActionResult Update(int idUpdate)
+        public IActionResult Update(int id)
         {
-            return View(PersonajeService.GetPersonaje(idUpdate));
+            return View(this.ReadCharacter(id));
         }
 
         [HttpPost]
@@ -67,7 +78,7 @@ namespace Los_Simpson_Con_Amnesia.Controllers
         {
             if (ModelState.IsValid)
             {
-                PersonajeService.UpdateCharacter(updatePersonaje);
+                this.UpdateCharacter(updatePersonaje);
                 return RedirectToAction("ReadAll");
             }
 
@@ -76,17 +87,80 @@ namespace Los_Simpson_Con_Amnesia.Controllers
 
 
         [HttpGet]
-        public IActionResult Delete()
+        public IActionResult GetDelete(int id)
         {
-            return View();
+            return View(this.ReadCharacter(id));
         }
 
         [HttpPost]
-        public IActionResult Delete(int idDelete)
+        public IActionResult PostDelete(int id)
         {
-            PersonajeService.DeleteCharacter(idDelete);
+            this.DeleteCharacter(id);
             return RedirectToAction("ReadAll");
         }
+
+
+        /*Servicio (Se ENCARGA de TODA la LÓGICA del programa) = CRUD */
+
+        //Create
+        public void CreateCharacter(Personaje createCharacter)
+        {
+            contadorID++;
+            createCharacter.Id = contadorID;
+            characters.Add(createCharacter);
+        }
+
+        //Read All
+        public List<Personaje> ListCharacter()
+        {
+            return characters;
+        }
+
+        //Read Single
+
+        public Personaje ReadCharacter(int idRead)
+        {
+            Personaje getCharacter = null;
+            bool existCharacter = this.ExistCharacter(idRead);
+
+            if (existCharacter)
+            {
+                getCharacter = this.GetCharacter(idRead);
+            }
+
+            return getCharacter;
+        }
+
+        //Update
+        public void UpdateCharacter(Personaje updateCharacter)
+        {
+            Personaje oldCharacter = this.ReadCharacter(updateCharacter.Id);
+            int indexOldChar = characters.IndexOf(oldCharacter);
+
+            characters.Insert(indexOldChar, updateCharacter);
+            characters.RemoveAt(indexOldChar + 1);
+        }
+
+        //Delete
+        public void DeleteCharacter(int idDelete)
+        {
+            Personaje deleteCharacter = this.ReadCharacter(idDelete);
+            characters.Remove(deleteCharacter);
+        }
+
+        //Exist
+        public bool ExistCharacter(int idExist)
+        {
+            return characters.Exists(character => character.Id == idExist);
+        }
+
+        //Get
+        public Personaje GetCharacter(int idGet)
+        {
+            return characters.FirstOrDefault(character => character.Id == idGet);
+        }
+
+
 
     }
 }

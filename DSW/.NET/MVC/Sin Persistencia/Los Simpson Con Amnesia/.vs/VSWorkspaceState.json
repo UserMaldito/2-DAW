@@ -1,8 +1,10 @@
 {
   "ExpandedNodes": [
     "",
-    "\\Los Simpson Con Amnesia"
+    "\\Los Simpson Con Amnesia",
+    "\\Los Simpson Con Amnesia\\Views",
+    "\\Los Simpson Con Amnesia\\Views\\Servicios"
   ],
-  "SelectedNode": "\\Los Simpson Con Amnesia\\Program.cs",
+  "SelectedNode": "\\Los Simpson Con Amnesia\\Views\\Servicios\\PersonajeService.cs",
   "PreviewInSolutionExplorer": false
 }
